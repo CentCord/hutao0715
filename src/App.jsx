@@ -1,10 +1,12 @@
+import { lazy, Suspense } from 'react'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import PlumBlossoms from './components/effects/PlumBlossoms'
 import Hero from './sections/Hero'
-import Recruitment from './sections/Recruitment'
-import About from './sections/About'
-import OfflineEvents from './sections/OfflineEvents'
+
+const Recruitment = lazy(() => import('./sections/Recruitment'))
+const About = lazy(() => import('./sections/About'))
+const OfflineEvents = lazy(() => import('./sections/OfflineEvents'))
 
 function App() {
   return (
@@ -13,10 +15,14 @@ function App() {
       <Navbar />
       <main className="pt-20">
         <Hero />
-        <Recruitment />
-        <About />
+        <Suspense fallback={null}>
+          <Recruitment />
+          <About />
+        </Suspense>
       </main>
-      <OfflineEvents />
+      <Suspense fallback={null}>
+        <OfflineEvents />
+      </Suspense>
       <Footer />
     </div>
   )

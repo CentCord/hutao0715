@@ -47,9 +47,11 @@ export default function Footer() {
             <div className="relative group">
               <div className="p-2 bg-card/70 backdrop-blur-sm rounded-xl border border-card-border shadow-sm">
                 <img
-                  src="/images/6639ec1cb1e5a01bac318e61e264a5b5_720.jpg"
+                  src="/images/qr-320.webp"
                   alt="交流群二维码"
                   className="w-36 h-36 sm:w-40 sm:h-40 object-cover rounded-lg"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <p className="text-xs text-paper-dim/60 mt-2">扫码加入交流群</p>

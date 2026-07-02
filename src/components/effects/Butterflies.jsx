@@ -1,12 +1,18 @@
-export default function Butterflies({ count = 5, className = '' }) {
-  const butterflies = Array.from({ length: count }, (_, i) => ({
-    id: i,
-    top: `${10 + Math.random() * 70}%`,
-    left: `${5 + Math.random() * 85}%`,
-    size: 16 + Math.random() * 12,
-    delay: Math.random() * 5,
-    duration: 15 + Math.random() * 8,
-  }))
+import { useMemo, memo } from 'react'
+
+function Butterflies({ count = 5, className = '' }) {
+  const butterflies = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => ({
+        id: i,
+        top: `${10 + Math.random() * 70}%`,
+        left: `${5 + Math.random() * 85}%`,
+        size: 16 + Math.random() * 12,
+        delay: Math.random() * 5,
+        duration: 15 + Math.random() * 8,
+      })),
+    [count]
+  )
 
   return (
     <div className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}>
@@ -30,3 +36,5 @@ export default function Butterflies({ count = 5, className = '' }) {
     </div>
   )
 }
+
+export default memo(Butterflies)

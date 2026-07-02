@@ -47,6 +47,9 @@ export default function ImageCarousel({
             'absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out',
             index === current ? 'opacity-100' : 'opacity-0'
           )}
+          loading={index === current ? undefined : 'lazy'}
+          fetchPriority={index === current ? 'high' : undefined}
+          decoding="async"
         />
       ))}
 

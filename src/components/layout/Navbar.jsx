@@ -47,6 +47,7 @@ export default function Navbar() {
   ]
 
   const audioRef = useRef(null)
+  const lastTimeUpdateRef = useRef(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -57,7 +58,13 @@ export default function Navbar() {
     const audio = audioRef.current
     if (!audio) return
 
-    const updateTime = () => setCurrentTime(audio.currentTime)
+    const updateTime = () => {
+      // 节流：每 250ms 最多更新一次进度，避免高频 timeupdate 触发重渲染
+      const now = performance.now()
+      if (now - lastTimeUpdateRef.current < 250) return
+      lastTimeUpdateRef.current = now
+      setCurrentTime(audio.currentTime)
+    }
     const updateDuration = () => setDuration(audio.duration)
     const handleEnded = () => setIsPlaying(false)
 
@@ -78,12 +85,21 @@ export default function Navbar() {
 
     if (isPlaying) {
       audio.pause()
-    } else {
-      audio.play().catch(() => {
-        // 浏览器自动播放策略阻止时静默处理
-      })
+      setIsPlaying(false)
+      return
     }
-    setIsPlaying(!isPlaying)
+
+    // 首次播放时才真正加载音频，避免首屏拉取 7.8 MB 文件
+    if (!audio.src) {
+      audio.src = '/music/蝶语之言.mp3'
+    }
+
+    audio.play()
+      .then(() => setIsPlaying(true))
+      .catch(() => {
+        // 浏览器自动播放策略阻止时静默处理
+        setIsPlaying(false)
+      })
   }
 
   const handleSeek = (e) => {
@@ -122,7 +138,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center">
-      <audio ref={audioRef} src="/music/蝶语之言.mp3" preload="metadata" />
+      <audio ref={audioRef} preload="none" />
 
       <nav
         className="relative w-full xl:w-[92vw] max-w-6xl h-18 px-4 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-b-2xl border-b border-x border-card-border/60 bg-card/85 shadow-[0_4px_24px_rgba(var(--color-shade),0.08)]"

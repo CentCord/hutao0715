@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { cn } from '../../lib/utils'
 
-export default function Button({
+function Button({
   children,
   variant = 'primary',
   className,
@@ -43,3 +44,5 @@ export default function Button({
     </button>
   )
 }
+
+export default memo(Button)
