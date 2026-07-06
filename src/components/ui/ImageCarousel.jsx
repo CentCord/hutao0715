@@ -188,14 +188,24 @@ export default function ImageCarousel({
         <>
           <button
             onClick={prev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full text-white transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            style={{
+              WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+              backdropFilter: 'blur(12px) saturate(180%)',
+              background: 'rgba(var(--color-card), 0.5)',
+            }}
             aria-label="上一张"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={next}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full text-white transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            style={{
+              WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+              backdropFilter: 'blur(12px) saturate(180%)',
+              background: 'rgba(var(--color-card), 0.5)',
+            }}
             aria-label="下一张"
           >
             <ChevronRight size={20} />
@@ -205,7 +215,14 @@ export default function ImageCarousel({
 
       {/* 指示点 */}
       {images.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+        <div
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full"
+          style={{
+            WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+            backdropFilter: 'blur(12px) saturate(180%)',
+            background: 'rgba(var(--color-card), 0.45)',
+          }}
+        >
           {images.map((_, index) => (
             <button
               key={index}
