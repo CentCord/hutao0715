@@ -1,32 +1,43 @@
 import { useState, useEffect } from 'react'
 
-/* ── SVG 梅花（5瓣） ── */
-function PlumFlowerSVG({
-  cx,
-  cy,
-  scale = 1,
-  color = 'currentColor',
-  opacity = 0.9,
-}) {
+/* ── 彩色梅花 SVG（红/粉色） ── */
+function ColorPlumFlower({ cx, cy, scale = 1, variant = 'red' }) {
+  const colors = {
+    red: { petal: '#c23b22', center: '#e0665a' },
+    pink: { petal: '#e0665a', center: '#f2a6a0' },
+    light: { petal: '#d4544a', center: '#e8c4c0' },
+  }
+  const c = colors[variant] || colors.red
   const s = scale
+
   return (
     <g transform={`translate(${cx},${cy}) scale(${s})`}>
-      {[0, 72, 144, 216, 288].map((angle) => (
-        <g key={angle} transform={`rotate(${angle})`}>
+      {[0, 72, 144, 216, 288].map((angle, i) => (
+        <g key={i} transform={`rotate(${angle})`}>
           <path
-            d="M0 0C-2 -3 -6 -8 -4 -13Q-2 -14.5 0 -13.5Q2 -14.5 4 -13C6 -8 2 -3 0 0Z"
-            fill={color}
-            opacity={opacity}
+            d="M0 0C-2.2 -3.5 -7 -9 -4.5 -15Q-2.2 -16.5 0 -15Q2.2 -16.5 4.5 -15C7 -9 2.2 -3.5 0 0Z"
+            fill={c.petal}
+            opacity="0.92"
           />
         </g>
       ))}
-      <circle r="2.5" fill={color} opacity={opacity * 0.7} />
+      <circle r="2.8" fill={c.center} opacity="0.85" />
+    </g>
+  )
+}
+
+/* ── 花苞 ── */
+function FlowerBud({ cx, cy, scale = 1, color = '#c23b22' }) {
+  return (
+    <g transform={`translate(${cx},${cy}) scale(${scale})`}>
+      <ellipse rx="4" ry="5.5" fill={color} opacity="0.75" />
+      <ellipse rx="2" ry="3" fill={color} opacity="0.5" transform="rotate(-20)" />
     </g>
   )
 }
 
 /* ── 飘落花瓣 ── */
-function FallingPetal({ delay, left, duration }) {
+function FallingPetal({ delay, left, duration, color = '#e0665a' }) {
   return (
     <div
       className="absolute animate-fall-intro"
@@ -37,11 +48,11 @@ function FallingPetal({ delay, left, duration }) {
         animationDuration: `${duration}s`,
       }}
     >
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path
-          d="M6 12C4 9 1 5 3 1Q4.5 0 6 1Q7.5 0 9 1C11 5 8 9 6 12Z"
-          fill="var(--petal-1)"
-          opacity="0.7"
+          d="M7 14C4.5 10.5 1 6 3.5 1Q5 0 7 1.5Q9 0 10.5 1C13 6 9.5 10.5 7 14Z"
+          fill={color}
+          opacity="0.65"
         />
       </svg>
     </div>
@@ -49,7 +60,7 @@ function FallingPetal({ delay, left, duration }) {
 }
 
 export default function IntroAnimation({ onComplete }) {
-  const [phase, setPhase] = useState('growing') // growing -> blooming -> fading -> done
+  const [phase, setPhase] = useState('growing')
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase('blooming'), 1800)
@@ -68,17 +79,18 @@ export default function IntroAnimation({ onComplete }) {
   if (phase === 'done') return null
 
   const isFading = phase === 'fading'
+  const showFlowers = phase === 'blooming' || phase === 'fading'
 
   return (
     <div
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ink transition-opacity duration-700 ${isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
     >
-      {/* ── 水墨背景晕染 ── */}
+      {/* ── 柔和背景光晕 ── */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-30"
         style={{
           background:
-            'radial-gradient(ellipse at 30% 80%, rgba(181,58,42,0.15) 0%, transparent 60%), radial-gradient(ellipse at 70% 60%, rgba(166,124,46,0.1) 0%, transparent 50%)',
+            'radial-gradient(ellipse at 20% 80%, rgba(194,59,34,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 60%, rgba(224,102,90,0.12) 0%, transparent 50%)',
         }}
       />
 
@@ -89,138 +101,116 @@ export default function IntroAnimation({ onComplete }) {
           className="w-full h-full"
           style={{ overflow: 'visible' }}
         >
-          {/* ── 枝干生长动画 ── */}
-          {/* 主干：从左下往右上弯曲生长 */}
+          {/* ── 枝干生长 ── */}
+          {/* 主干：从左下往右上 */}
           <path
-            d="M60 420 C60 380, 80 340, 110 300 C140 260, 160 240, 180 220 C200 200, 220 180, 240 150"
+            d="M40 440 C45 390, 65 350, 100 310 C135 270, 160 245, 185 220 C210 195, 235 170, 260 140"
             fill="none"
-            stroke="rgb(var(--color-paper-dim))"
-            strokeWidth="3.5"
+            stroke="#8B6914"
+            strokeWidth="4"
             strokeLinecap="round"
             className="intro-branch-main"
           />
 
-          {/* 主分叉 1：右上 */}
+          {/* 主分叉 1：向右上 */}
           <path
-            d="M180 220 C200 200, 230 170, 260 140 C290 110, 320 90, 360 80"
+            d="M185 220 C210 195, 245 165, 280 135 C315 105, 350 85, 395 70"
             fill="none"
-            stroke="rgb(var(--color-paper-dim))"
-            strokeWidth="2.5"
+            stroke="#A07820"
+            strokeWidth="3"
             strokeLinecap="round"
             className="intro-branch-1"
           />
 
-          {/* 主分叉 2：右中 */}
+          {/* 主分叉 2：向右中 */}
           <path
-            d="M160 240 C190 230, 230 220, 270 210 C300 200, 330 190, 360 180"
+            d="M160 245 C195 235, 240 225, 285 215 C320 205, 355 195, 395 185"
             fill="none"
-            stroke="rgb(var(--color-paper-dim))"
-            strokeWidth="2"
+            stroke="#A07820"
+            strokeWidth="2.5"
             strokeLinecap="round"
             className="intro-branch-2"
           />
 
           {/* 细枝 1 */}
           <path
-            d="M260 140 C280 120, 300 100, 320 85"
+            d="M280 135 C305 115, 330 95, 355 80"
             fill="none"
-            stroke="rgb(var(--color-paper-dim))"
-            strokeWidth="1.5"
+            stroke="#B8942A"
+            strokeWidth="2"
             strokeLinecap="round"
             className="intro-branch-3"
           />
 
           {/* 细枝 2 */}
           <path
-            d="M270 210 C285 195, 300 180, 315 165"
+            d="M285 215 C305 200, 325 185, 345 170"
             fill="none"
-            stroke="rgb(var(--color-paper-dim))"
-            strokeWidth="1.5"
+            stroke="#B8942A"
+            strokeWidth="2"
             strokeLinecap="round"
             className="intro-branch-4"
           />
 
           {/* 细枝 3 */}
           <path
-            d="M110 300 C130 290, 150 280, 165 275"
+            d="M100 310 C125 300, 150 290, 170 282"
             fill="none"
-            stroke="rgb(var(--color-paper-dim))"
-            strokeWidth="1.5"
+            stroke="#B8942A"
+            strokeWidth="2"
             strokeLinecap="round"
             className="intro-branch-5"
           />
 
-          {/* ── 梅花花苞 → 绽放 ── */}
-          {/* 花苞 1：顶部主枝末端 */}
-          <g className="intro-bud-1" style={{ transformOrigin: '360px 80px' }}>
-            <circle cx="360" cy="80" r="4" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-1" style={{ transformOrigin: '360px 80px' }}>
-            <PlumFlowerSVG cx={360} cy={80} scale={1.6} />
+          {/* 细枝 4：主干中段向左 */}
+          <path
+            d="M135 270 C115 255, 95 240, 80 230"
+            fill="none"
+            stroke="#B8942A"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            className="intro-branch-6"
+          />
+
+          {/* ── 花苞 ── */}
+          <g className={`intro-bud ${showFlowers ? 'opacity-0' : 'opacity-100'}`}>
+            <FlowerBud cx={395} cy={70} color="#c23b22" />
+            <FlowerBud cx={395} cy={185} color="#d4544a" />
+            <FlowerBud cx={355} cy={80} color="#e0665a" />
+            <FlowerBud cx={345} cy={170} color="#c23b22" />
+            <FlowerBud cx={260} cy={140} color="#d4544a" />
+            <FlowerBud cx={170} cy={282} color="#e0665a" />
+            <FlowerBud cx={185} cy={220} color="#c23b22" />
+            <FlowerBud cx={80} cy={230} color="#d4544a" />
           </g>
 
-          {/* 花苞 2：右中分叉末端 */}
-          <g className="intro-bud-2" style={{ transformOrigin: '360px 180px' }}>
-            <circle cx="360" cy="180" r="3.5" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-2" style={{ transformOrigin: '360px 180px' }}>
-            <PlumFlowerSVG cx={360} cy={180} scale={1.4} />
-          </g>
-
-          {/* 花苞 3：细枝1末端 */}
-          <g className="intro-bud-3" style={{ transformOrigin: '320px 85px' }}>
-            <circle cx="320" cy="85" r="3" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-3" style={{ transformOrigin: '320px 85px' }}>
-            <PlumFlowerSVG cx={320} cy={85} scale={1.2} />
-          </g>
-
-          {/* 花苞 4：细枝2末端 */}
-          <g className="intro-bud-4" style={{ transformOrigin: '315px 165px' }}>
-            <circle cx="315" cy="165" r="3" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-4" style={{ transformOrigin: '315px 165px' }}>
-            <PlumFlowerSVG cx={315} cy={165} scale={1.2} />
-          </g>
-
-          {/* 花苞 5：中部分叉 */}
-          <g className="intro-bud-5" style={{ transformOrigin: '240px 150px' }}>
-            <circle cx="240" cy="150" r="3.5" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-5" style={{ transformOrigin: '240px 150px' }}>
-            <PlumFlowerSVG cx={240} cy={150} scale={1.3} />
-          </g>
-
-          {/* 花苞 6：左侧细枝 */}
-          <g className="intro-bud-6" style={{ transformOrigin: '165px 275px' }}>
-            <circle cx="165" cy="275" r="3" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-6" style={{ transformOrigin: '165px 275px' }}>
-            <PlumFlowerSVG cx={165} cy={275} scale={1.1} />
-          </g>
-
-          {/* 花苞 7：主干中段 */}
-          <g className="intro-bud-7" style={{ transformOrigin: '180px 220px' }}>
-            <circle cx="180" cy="220" r="3" fill="rgb(var(--color-plum))" opacity="0.6" />
-          </g>
-          <g className="intro-flower-7" style={{ transformOrigin: '180px 220px' }}>
-            <PlumFlowerSVG cx={180} cy={220} scale={1.2} />
+          {/* ── 绽放的梅花 ── */}
+          <g className={`intro-flower ${showFlowers ? 'opacity-100' : 'opacity-0'}`}>
+            <ColorPlumFlower cx={395} cy={70} scale={1.7} variant="red" />
+            <ColorPlumFlower cx={395} cy={185} scale={1.5} variant="pink" />
+            <ColorPlumFlower cx={355} cy={80} scale={1.3} variant="light" />
+            <ColorPlumFlower cx={345} cy={170} scale={1.3} variant="red" />
+            <ColorPlumFlower cx={260} cy={140} scale={1.4} variant="pink" />
+            <ColorPlumFlower cx={170} cy={282} scale={1.2} variant="light" />
+            <ColorPlumFlower cx={185} cy={220} scale={1.3} variant="red" />
+            <ColorPlumFlower cx={80} cy={230} scale={1.2} variant="pink" />
           </g>
         </svg>
 
         {/* ── 飘落花瓣层 ── */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {[
-            { d: 2.2, l: '15%', dur: 3.5 },
-            { d: 2.6, l: '35%', dur: 4.0 },
-            { d: 2.9, l: '55%', dur: 3.8 },
-            { d: 3.2, l: '75%', dur: 4.2 },
-            { d: 3.5, l: '25%', dur: 3.6 },
-            { d: 3.8, l: '65%', dur: 4.0 },
-            { d: 4.1, l: '45%', dur: 3.7 },
-            { d: 4.4, l: '85%', dur: 4.3 },
+            { d: 2.0, l: '10%', dur: 3.5, c: '#e0665a' },
+            { d: 2.3, l: '25%', dur: 4.0, c: '#f2a6a0' },
+            { d: 2.6, l: '40%', dur: 3.8, c: '#e0665a' },
+            { d: 2.9, l: '55%', dur: 4.2, c: '#c23b22' },
+            { d: 3.2, l: '70%', dur: 3.6, c: '#f2a6a0' },
+            { d: 3.5, l: '20%', dur: 4.0, c: '#e0665a' },
+            { d: 3.8, l: '80%', dur: 3.7, c: '#d4544a' },
+            { d: 4.1, l: '45%', dur: 4.3, c: '#f2a6a0' },
+            { d: 4.4, l: '65%', dur: 3.9, c: '#e0665a' },
           ].map((p, i) => (
-            <FallingPetal key={i} delay={p.d} left={p.l} duration={p.dur} />
+            <FallingPetal key={i} delay={p.d} left={p.l} duration={p.dur} color={p.c} />
           ))}
         </div>
       </div>
@@ -228,14 +218,14 @@ export default function IntroAnimation({ onComplete }) {
       {/* ── 标题 ── */}
       <div className="relative mt-2 text-center">
         <p
-          className={`text-display text-3xl md:text-4xl text-paper transition-all duration-700 ${phase === 'blooming' || phase === 'fading' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          style={{ transitionDelay: '200ms' }}
+          className={`text-display text-3xl md:text-4xl text-paper transition-all duration-700 ${showFlowers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          style={{ transitionDelay: '300ms' }}
         >
           雪霁梅香
         </p>
         <p
-          className={`text-decorative text-sm text-paper-dim mt-2 transition-all duration-700 ${phase === 'blooming' || phase === 'fading' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          style={{ transitionDelay: '500ms' }}
+          className={`text-decorative text-sm text-paper-dim mt-2 transition-all duration-700 ${showFlowers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          style={{ transitionDelay: '600ms' }}
         >
           胡桃生日会
         </p>
