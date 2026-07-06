@@ -33,6 +33,17 @@ export default function Footer() {
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-7xl opacity-10">🌺</div>
       </div>
 
+      {/* 卷轴装饰顶部 */}
+      <div className="absolute top-0 left-0 right-0 h-6 pointer-events-none overflow-hidden">
+        <div className="w-full h-full relative">
+          {/* 卷轴轴头装饰 */}
+          <div className="absolute top-0 left-4 w-8 h-6 rounded-b-full bg-earth/30 border-b border-earth/40" />
+          <div className="absolute top-0 right-4 w-8 h-6 rounded-b-full bg-earth/30 border-b border-earth/40" />
+          {/* 卷轴中间纹理 */}
+          <div className="absolute top-0 left-12 right-12 h-4 border-b border-dashed border-earth/20" />
+        </div>
+      </div>
+
       <div className="relative max-w-4xl mx-auto px-4 text-center">
         <div className="divider-gradient mb-8" />
 
