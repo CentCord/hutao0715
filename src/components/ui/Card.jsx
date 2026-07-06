@@ -9,7 +9,7 @@ function Card({ children, className, ...props }) {
         'backdrop-blur-sm',
         'card-topline red-string',
         'transition-all duration-300 ease-out',
-        'hover:-translate-y-1.5 hover:border-plum/35 hover:shadow-[0_10px_40px_rgba(var(--color-plum),0.12)]',
+        'hover:scale-[1.02] hover:-translate-y-1.5 hover:border-plum/35 hover:shadow-[0_10px_40px_rgba(var(--color-plum),0.12)]',
         className
       )}
       {...props}
