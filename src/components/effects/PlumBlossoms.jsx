@@ -15,11 +15,11 @@ function PlumPetalSVG({ color, size, rotateX, rotateY }) {
         transformStyle: 'preserve-3d',
       }}
     >
-      {/* 5瓣梅花 */}
+  {/* 5瓣梅花 — 真实梅花瓣形状：顶部有小凹口，底部圆润，整体扁宽 */}
       {[0, 72, 144, 216, 288].map((angle, i) => (
         <g key={i} transform={`rotate(${angle} 15 15)`}>
           <path
-            d="M15 3C15 3 12 10 12 13C12 15 13 16 15 16C17 16 18 15 18 13C18 10 15 3 15 3Z"
+            d="M15 15C13 12 9 7 11 2Q13 0.5 15 1.5Q17 0.5 19 2C21 7 17 12 15 15Z"
             fill={color}
             opacity="0.9"
           />

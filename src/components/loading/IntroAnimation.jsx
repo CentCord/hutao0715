@@ -22,33 +22,17 @@ function PlumFlower({ delay, size, left, top }) {
       viewBox="0 0 40 40"
       fill="none"
     >
-      <path
-        d="M20 5C20 5 16 12 16 16C16 18 18 20 20 20C22 20 24 18 24 16C24 12 20 5 20 5Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      <path
-        d="M5 20C5 20 12 16 16 16C18 16 20 18 20 20C20 22 18 24 16 24C12 24 5 20 5 20Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      <path
-        d="M35 20C35 20 28 16 24 16C22 16 20 18 20 20C20 22 22 24 24 24C28 24 35 20 35 20Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      <path
-        d="M20 35C20 35 16 28 16 24C16 22 18 20 20 20C22 20 24 22 24 24C24 28 20 35 20 35Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      <path
-        d="M20 5C20 5 18 12 20 16C21 18 22 19 20 20C19 21 18 20 16 20C12 20 5 20 5 20"
-        stroke="currentColor"
-        strokeWidth="0.5"
-        opacity="0.5"
-      />
-      <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.6" />
+      {/* 5瓣梅花 — 真实梅花瓣形状：顶部有小凹口，底部圆润，整体扁宽 */}
+      {[0, 72, 144, 216, 288].map((angle) => (
+        <g key={angle} transform={`rotate(${angle} 20 20)`}>
+          <path
+            d="M20 20C18 17 14 12 16 7Q18 5.5 20 6.5Q22 5.5 24 7C26 12 22 17 20 20Z"
+            fill="currentColor"
+            opacity="0.9"
+          />
+        </g>
+      ))}
+      <circle cx="20" cy="20" r="4" fill="currentColor" opacity="0.6" />
     </svg>
   )
 }

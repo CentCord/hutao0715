@@ -56,7 +56,14 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
             {/* 群二维码 */}
             <div className="relative group">
-              <div className="p-2 bg-card/70 backdrop-blur-sm rounded-xl border border-card-border shadow-sm">
+              <div
+                className="p-2 rounded-xl border border-card-border shadow-sm"
+                style={{
+                  WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  background: 'rgba(var(--color-card), 0.6)',
+                }}
+              >
                 <img
                   src="/images/qr-320.webp"
                   alt="交流群二维码"
@@ -71,7 +78,14 @@ export default function Footer() {
             {/* 群号与复制按钮 */}
             <div className="flex flex-col items-center sm:items-start gap-3">
               <p className="text-paper-dim text-sm">或搜索群号加入</p>
-              <div className="flex items-center gap-3">
+              <div
+                className="flex items-center gap-3 p-3 rounded-xl border border-card-border/60"
+                style={{
+                  WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  background: 'rgba(var(--color-card), 0.6)',
+                }}
+              >
                 <span className="text-title text-2xl sm:text-3xl text-paper tracking-wider">
                   {GROUP_NUMBER}
                 </span>
